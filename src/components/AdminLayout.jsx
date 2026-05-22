@@ -9,24 +9,35 @@ const links = [
   { to: '/admin/comunicados', label: 'Comunicados' },
   { to: '/admin/eventos', label: 'Eventos' },
   { to: '/admin/agendamentos', label: 'Agendamentos' },
-  { to: '/admin/ebos', label: 'Ebós' },
   { to: '/admin/financeiro', label: 'Financeiro' },
   { to: '/admin/chat', label: 'Chat', badge: true },
   { to: '/admin/doacoes', label: 'Doações' },
   { to: '/admin/usuarios', label: 'Usuários' },
 ]
 
+function dataAmanha() {
+  const d = new Date()
+  d.setDate(d.getDate() + 1)
+  return d.toISOString().split('T')[0]
+}
+
 export default function AdminLayout({ children }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [badgeChat, setBadgeChat] = useState(0)
+  const [ebosAmanha, setEbosAmanha] = useState([])
+  const [alertaDispensado, setAlertaDispensado] = useState(() => {
+    return localStorage.getItem('alerta-ebo-data') === new Date().toISOString().split('T')[0]
+  })
 
   useEffect(() => {
     fetchBadge()
+    fetchEbosAmanha()
 
     const channel = supabase
       .channel('admin-badge-conversas')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'conversas' }, fetchBadge)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'agendamentos' }, fetchEbosAmanha)
       .subscribe()
 
     return () => { supabase.removeChannel(channel) }
@@ -36,6 +47,24 @@ export default function AdminLayout({ children }) {
     const { data } = await supabase.from('conversas').select('nao_lidas_admin')
     const total = data?.reduce((s, c) => s + (c.nao_lidas_admin ?? 0), 0) ?? 0
     setBadgeChat(total)
+  }
+
+  async function fetchEbosAmanha() {
+    const { data } = await supabase
+      .from('agendamentos')
+      .select('id, horario, usuarios(nome)')
+      .eq('tipo', 'Limpeza Espiritual')
+      .eq('data', dataAmanha())
+      .neq('status', 'cancelado')
+      .neq('status', 'realizado')
+      .order('horario')
+    setEbosAmanha(data ?? [])
+  }
+
+  function dispensarAlerta() {
+    const hoje = new Date().toISOString().split('T')[0]
+    localStorage.setItem('alerta-ebo-data', hoje)
+    setAlertaDispensado(true)
   }
 
   async function handleLogout() {
@@ -84,6 +113,20 @@ export default function AdminLayout({ children }) {
             </NavLink>
           ))}
         </nav>
+
+        {!alertaDispensado && ebosAmanha.length > 0 && (
+          <div className={styles.alerta}>
+            <div className={styles.alertaHeader}>
+              <span className={styles.alertaTitulo}>Limpeza Espiritual amanhã</span>
+              <button onClick={dispensarAlerta} className={styles.alertaFechar} title="Dispensar">×</button>
+            </div>
+            {ebosAmanha.map(a => (
+              <div key={a.id} className={styles.alertaItem}>
+                {a.horario?.slice(0, 5)} — {a.usuarios?.nome ?? 'Cliente'}
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className={styles.footer}>
           <span className={styles.email}>{user?.email}</span>

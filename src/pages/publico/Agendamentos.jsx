@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import PublicoLayout from '../../components/PublicoLayout'
 import styles from './Agendamentos.module.css'
 
-const TIPOS = ['Consulta', 'Atendimento', 'Limpeza Espiritual', 'Trabalho Espiritual', 'Despacho', 'Outro']
+const TIPOS = ['Consulta', 'Jogo', 'Limpeza Espiritual']
 
 const HORARIOS = [
   '08:00','09:00','10:00','11:00','12:00','13:00',

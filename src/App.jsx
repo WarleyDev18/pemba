@@ -8,7 +8,6 @@ import AdminDashboard from './pages/admin/Dashboard'
 import AdminComunicados from './pages/admin/Comunicados'
 import AdminEventos from './pages/admin/Eventos'
 import AdminAgendamentos from './pages/admin/Agendamentos'
-import AdminEbos from './pages/admin/Ebos'
 import AdminFinanceiro from './pages/admin/Financeiro'
 import AdminChatLista from './pages/admin/ChatLista'
 import AdminChatConversa from './pages/admin/ChatConversa'
@@ -19,7 +18,6 @@ import PublicoDashboard from './pages/publico/Dashboard'
 import PublicoComunicados from './pages/publico/Comunicados'
 import PublicoEventos from './pages/publico/Eventos'
 import PublicoAgendamentos from './pages/publico/Agendamentos'
-import PublicoEbos from './pages/publico/Ebos'
 import PublicoChat from './pages/publico/Chat'
 import PublicoDoacao from './pages/publico/Doacao'
 
@@ -55,7 +53,6 @@ export default function App() {
           <Route path="/admin/comunicados" element={<AdminRoute><AdminComunicados /></AdminRoute>} />
           <Route path="/admin/eventos" element={<AdminRoute><AdminEventos /></AdminRoute>} />
           <Route path="/admin/agendamentos" element={<AdminRoute><AdminAgendamentos /></AdminRoute>} />
-          <Route path="/admin/ebos" element={<AdminRoute><AdminEbos /></AdminRoute>} />
           <Route path="/admin/financeiro" element={<AdminRoute><AdminFinanceiro /></AdminRoute>} />
           <Route path="/admin/chat" element={<AdminRoute><AdminChatLista /></AdminRoute>} />
           <Route path="/admin/chat/:conversa_id" element={<AdminRoute><AdminChatConversa /></AdminRoute>} />
@@ -67,7 +64,6 @@ export default function App() {
           <Route path="/dashboard/comunicados" element={<PublicoRoute><PublicoComunicados /></PublicoRoute>} />
           <Route path="/dashboard/eventos" element={<PublicoRoute><PublicoEventos /></PublicoRoute>} />
           <Route path="/dashboard/agendamentos" element={<PublicoRoute><PublicoAgendamentos /></PublicoRoute>} />
-          <Route path="/dashboard/ebos" element={<PublicoRoute><PublicoEbos /></PublicoRoute>} />
           <Route path="/dashboard/chat" element={<PublicoRoute><PublicoChat /></PublicoRoute>} />
           <Route path="/dashboard/doacao" element={<PublicoRoute><PublicoDoacao /></PublicoRoute>} />
 

@@ -5,7 +5,6 @@ import styles from './PublicoLayout.module.css'
 const LINKS_BASE = [
   { to: '/dashboard', label: 'Início', exact: true },
   { to: '/dashboard/agendamentos', label: 'Agendamentos' },
-  { to: '/dashboard/ebos', label: 'Ebós' },
   { to: '/dashboard/eventos', label: 'Calendário' },
   { to: '/dashboard/comunicados', label: 'Comunicados' },
   { to: '/dashboard/chat', label: 'Chat' },

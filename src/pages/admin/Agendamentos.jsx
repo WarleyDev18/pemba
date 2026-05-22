@@ -3,7 +3,7 @@ import { supabase } from '../../lib/supabase'
 import AdminLayout from '../../components/AdminLayout'
 import styles from './Agendamentos.module.css'
 
-const TIPOS = ['Consulta', 'Atendimento', 'Limpeza Espiritual', 'Trabalho Espiritual', 'Despacho', 'Outro']
+const TIPOS = ['Consulta', 'Jogo', 'Limpeza Espiritual']
 const STATUS = ['pendente', 'confirmado', 'realizado', 'cancelado']
 const FILTROS = ['todos', 'pendente', 'confirmado', 'realizado', 'cancelado']
 
