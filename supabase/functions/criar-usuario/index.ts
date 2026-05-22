@@ -34,7 +34,8 @@ serve(async (req) => {
       .single()
     if (me?.perfil !== 'admin') throw new Error('Acesso negado')
 
-    const { nome, email, senha, perfil = 'publico' } = await req.json()
+    const { nome, email, senha, perfil: perfilRaw = 'cliente' } = await req.json()
+    const perfil = ['admin', 'filho_santo', 'cliente'].includes(perfilRaw) ? perfilRaw : 'cliente'
     if (!nome?.trim() || !email?.trim() || !senha?.trim()) {
       throw new Error('Nome, email e senha são obrigatórios')
     }
