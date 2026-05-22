@@ -12,7 +12,6 @@ export default function PublicoComunicados() {
       const { data } = await supabase
         .from('comunicados')
         .select('*')
-        .eq('publico', true)
         .order('criado_em', { ascending: false })
       setComunicados(data ?? [])
       setCarregando(false)
