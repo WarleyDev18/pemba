@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../lib/supabase'
 import AdminLayout from '../../components/AdminLayout'
 import styles from './Eventos.module.css'
@@ -11,10 +11,14 @@ export default function AdminEventos() {
   const [eventos, setEventos] = useState([])
   const [carregando, setCarregando] = useState(true)
   const [form, setForm] = useState(vazio)
+  const [fotoFile, setFotoFile] = useState(null)
+  const [fotoPreview, setFotoPreview] = useState(null)
+  const [fotoAtual, setFotoAtual] = useState(null)
   const [editandoId, setEditandoId] = useState(null)
   const [modalAberto, setModalAberto] = useState(false)
   const [salvando, setSalvando] = useState(false)
   const [erro, setErro] = useState('')
+  const inputFotoRef = useRef(null)
 
   useEffect(() => { carregar() }, [])
 
@@ -30,6 +34,9 @@ export default function AdminEventos() {
 
   function abrirNovo() {
     setForm(vazio)
+    setFotoFile(null)
+    setFotoPreview(null)
+    setFotoAtual(null)
     setEditandoId(null)
     setErro('')
     setModalAberto(true)
@@ -44,6 +51,9 @@ export default function AdminEventos() {
       tipo: ev.tipo,
       publico: ev.publico,
     })
+    setFotoFile(null)
+    setFotoPreview(null)
+    setFotoAtual(ev.foto_url ?? null)
     setEditandoId(ev.id)
     setErro('')
     setModalAberto(true)
@@ -52,8 +62,40 @@ export default function AdminEventos() {
   function fecharModal() {
     setModalAberto(false)
     setForm(vazio)
+    setFotoFile(null)
+    setFotoPreview(null)
+    setFotoAtual(null)
     setEditandoId(null)
     setErro('')
+  }
+
+  function handleFotoChange(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 5 * 1024 * 1024) {
+      setErro('A foto deve ter no máximo 5 MB.')
+      return
+    }
+    setFotoFile(file)
+    setFotoPreview(URL.createObjectURL(file))
+    setErro('')
+  }
+
+  function removerFoto() {
+    setFotoFile(null)
+    setFotoPreview(null)
+    setFotoAtual(null)
+    if (inputFotoRef.current) inputFotoRef.current.value = ''
+  }
+
+  async function uploadFoto() {
+    if (!fotoFile) return fotoAtual
+    const ext = fotoFile.name.split('.').pop()
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+    const { error } = await supabase.storage.from('eventos').upload(path, fotoFile, { upsert: false })
+    if (error) throw new Error('Erro ao enviar a foto.')
+    const { data } = supabase.storage.from('eventos').getPublicUrl(path)
+    return data.publicUrl
   }
 
   async function salvar(e) {
@@ -61,28 +103,32 @@ export default function AdminEventos() {
     setSalvando(true)
     setErro('')
 
-    const payload = {
-      titulo: form.titulo.trim(),
-      descricao: form.descricao.trim() || null,
-      data: form.data,
-      horario: form.horario || null,
-      tipo: form.tipo,
-      publico: form.publico,
-    }
+    try {
+      const foto_url = await uploadFoto()
 
-    const { error } = editandoId
-      ? await supabase.from('eventos').update(payload).eq('id', editandoId)
-      : await supabase.from('eventos').insert(payload)
+      const payload = {
+        titulo: form.titulo.trim(),
+        descricao: form.descricao.trim() || null,
+        data: form.data,
+        horario: form.horario || null,
+        tipo: form.tipo,
+        publico: form.publico,
+        foto_url: foto_url ?? null,
+      }
 
-    if (error) {
-      setErro('Erro ao salvar. Tente novamente.')
+      const { error } = editandoId
+        ? await supabase.from('eventos').update(payload).eq('id', editandoId)
+        : await supabase.from('eventos').insert(payload)
+
+      if (error) throw new Error('Erro ao salvar.')
+
+      await carregar()
+      fecharModal()
+    } catch (err) {
+      setErro(err.message ?? 'Erro ao salvar. Tente novamente.')
+    } finally {
       setSalvando(false)
-      return
     }
-
-    await carregar()
-    fecharModal()
-    setSalvando(false)
   }
 
   async function excluir(id) {
@@ -105,6 +151,8 @@ export default function AdminEventos() {
   const proximos = eventos.filter(e => e.data >= hoje)
   const passados = eventos.filter(e => e.data < hoje)
 
+  const fotoExibida = fotoPreview ?? fotoAtual
+
   return (
     <AdminLayout>
       <div className={styles.header}>
@@ -122,7 +170,10 @@ export default function AdminEventos() {
             <section className={styles.secao}>
               <h2 className={styles.secaoTitulo}>Próximos</h2>
               <div className={styles.lista}>
-                {proximos.map(ev => <CardEvento key={ev.id} ev={ev} onEditar={abrirEditar} onExcluir={excluir} formatarData={formatarData} formatarHorario={formatarHorario} />)}
+                {proximos.map(ev => (
+                  <CardEvento key={ev.id} ev={ev} onEditar={abrirEditar} onExcluir={excluir}
+                    formatarData={formatarData} formatarHorario={formatarHorario} />
+                ))}
               </div>
             </section>
           )}
@@ -130,7 +181,10 @@ export default function AdminEventos() {
             <section className={styles.secao}>
               <h2 className={styles.secaoTitulo}>Anteriores</h2>
               <div className={styles.lista}>
-                {[...passados].reverse().map(ev => <CardEvento key={ev.id} ev={ev} onEditar={abrirEditar} onExcluir={excluir} formatarData={formatarData} formatarHorario={formatarHorario} passado />)}
+                {[...passados].reverse().map(ev => (
+                  <CardEvento key={ev.id} ev={ev} onEditar={abrirEditar} onExcluir={excluir}
+                    formatarData={formatarData} formatarHorario={formatarHorario} passado />
+                ))}
               </div>
             </section>
           )}
@@ -200,6 +254,32 @@ export default function AdminEventos() {
                 />
               </label>
 
+              {/* Upload de foto */}
+              <div className={styles.uploadArea}>
+                {fotoExibida ? (
+                  <div className={styles.uploadPreviewBox}>
+                    <img src={fotoExibida} alt="Preview" className={styles.uploadPreview} />
+                    <button type="button" onClick={removerFoto} className={styles.uploadRemover}>
+                      Remover foto
+                    </button>
+                  </div>
+                ) : (
+                  <label className={styles.uploadLabel} htmlFor="foto-input">
+                    <span className={styles.uploadIcone}>📷</span>
+                    <span>Adicionar foto</span>
+                    <span className={styles.uploadDica}>JPG, PNG ou WebP — máx. 5 MB</span>
+                  </label>
+                )}
+                <input
+                  id="foto-input"
+                  ref={inputFotoRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleFotoChange}
+                  className={styles.uploadInput}
+                />
+              </div>
+
               <label className={styles.checkLabel}>
                 <input
                   type="checkbox"
@@ -215,7 +295,7 @@ export default function AdminEventos() {
               <div className={styles.modalAcoes}>
                 <button type="button" onClick={fecharModal} className={styles.btnCancelar}>Cancelar</button>
                 <button type="submit" disabled={salvando} className={styles.btnSalvar}>
-                  {salvando ? 'Salvando...' : 'Salvar'}
+                  {salvando ? 'Enviando...' : 'Salvar'}
                 </button>
               </div>
             </form>
@@ -229,23 +309,28 @@ export default function AdminEventos() {
 function CardEvento({ ev, onEditar, onExcluir, formatarData, formatarHorario, passado }) {
   return (
     <div className={`${styles.card} ${passado ? styles.cardPassado : ''}`}>
-      <div className={styles.cardEsquerda}>
-        <span className={styles.cardData}>{formatarData(ev.data)}</span>
-        {ev.horario && <span className={styles.cardHorario}>{formatarHorario(ev.horario)}</span>}
-      </div>
-      <div className={styles.cardCorpo}>
-        <div className={styles.cardTopo}>
-          <span className={styles.cardTitulo}>{ev.titulo}</span>
-          <div className={styles.badges}>
-            <span className={`${styles.badge} ${styles[`tipo${ev.tipo.replace(/\s/g,'')}`] ?? styles.tipoOutro}`}>{ev.tipo}</span>
-            {!ev.publico && <span className={`${styles.badge} ${styles.badgePrivado}`}>Privado</span>}
-          </div>
+      {ev.foto_url && (
+        <img src={ev.foto_url} alt={ev.titulo} className={styles.cardFoto} />
+      )}
+      <div className={styles.cardCorpoWrapper}>
+        <div className={styles.cardEsquerda}>
+          <span className={styles.cardData}>{formatarData(ev.data)}</span>
+          {ev.horario && <span className={styles.cardHorario}>{formatarHorario(ev.horario)}</span>}
         </div>
-        {ev.descricao && <p className={styles.cardDesc}>{ev.descricao}</p>}
-      </div>
-      <div className={styles.acoes}>
-        <button onClick={() => onEditar(ev)} className={styles.btnEditar}>Editar</button>
-        <button onClick={() => onExcluir(ev.id)} className={styles.btnExcluir}>Excluir</button>
+        <div className={styles.cardCorpo}>
+          <div className={styles.cardTopo}>
+            <span className={styles.cardTitulo}>{ev.titulo}</span>
+            <div className={styles.badges}>
+              <span className={`${styles.badge} ${styles[`tipo${ev.tipo.replace(/\s/g,'')}`] ?? styles.tipoOutro}`}>{ev.tipo}</span>
+              {!ev.publico && <span className={`${styles.badge} ${styles.badgePrivado}`}>Privado</span>}
+            </div>
+          </div>
+          {ev.descricao && <p className={styles.cardDesc}>{ev.descricao}</p>}
+        </div>
+        <div className={styles.acoes}>
+          <button onClick={() => onEditar(ev)} className={styles.btnEditar}>Editar</button>
+          <button onClick={() => onExcluir(ev.id)} className={styles.btnExcluir}>Excluir</button>
+        </div>
       </div>
     </div>
   )

@@ -49,16 +49,31 @@
   background: #ffffff;
   border: 1px solid #e8d898;
   border-radius: 10px;
-  padding: 1rem 1.25rem;
+  overflow: hidden;
   display: flex;
-  align-items: flex-start;
-  gap: 1.25rem;
+  flex-direction: column;
   transition: border-color 0.15s;
 
   &:hover { border-color: #C49A28; }
 }
 
 .cardPassado { opacity: 0.55; }
+
+.cardFoto {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+
+.cardCorpoWrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1rem 1.25rem;
+  flex: 1;
+}
 
 .cardEsquerda {
   display: flex;
@@ -271,3 +286,60 @@
   &:hover:not(:disabled) { opacity: 0.9; }
   &:disabled { opacity: 0.6; cursor: not-allowed; }
 }
+
+/* Upload de foto */
+.uploadArea {
+  border: 1.5px dashed #e8d898;
+  border-radius: 8px;
+  background: #fffdf7;
+  overflow: hidden;
+}
+
+.uploadLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 1.5rem 1rem;
+  cursor: pointer;
+  color: #b09050;
+  font-size: 0.875rem;
+  transition: background 0.15s;
+
+  &:hover { background: #FDF5DC; }
+}
+
+.uploadIcone { font-size: 1.75rem; }
+
+.uploadDica { font-size: 0.75rem; color: #c0a060; }
+
+.uploadPreviewBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+}
+
+.uploadPreview {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+}
+
+.uploadRemover {
+  font-size: 0.8rem;
+  color: #8B1A1A;
+  background: transparent;
+  border: 1px solid #E0A090;
+  border-radius: 5px;
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover { background: #FEF0EE; }
+}
+
+.uploadInput { display: none; }

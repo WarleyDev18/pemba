@@ -82,24 +82,29 @@ function CardEvento({ ev, formatarData, formatarHorario, passado }) {
 
   return (
     <div className={`${styles.card} ${passado ? styles.cardPassado : ''}`}>
-      <div className={styles.dataBox}>
-        <span className={styles.dataDia}>{dia}</span>
-        <span className={styles.dataMes}>{mes}</span>
-        <span className={styles.dataAno}>{ano}</span>
-      </div>
-
-      <div className={styles.corpo}>
-        <div className={styles.topo}>
-          <span className={styles.cardTitulo}>{ev.titulo}</span>
-          <span
-            className={styles.badge}
-            style={{ background: cores.bg, color: cores.cor }}
-          >
-            {ev.tipo}
-          </span>
+      {ev.foto_url && (
+        <img src={ev.foto_url} alt={ev.titulo} className={styles.cardFoto} />
+      )}
+      <div className={styles.cardInfo}>
+        <div className={styles.dataBox}>
+          <span className={styles.dataDia}>{dia}</span>
+          <span className={styles.dataMes}>{mes}</span>
+          <span className={styles.dataAno}>{ano}</span>
         </div>
-        {horario && <span className={styles.horario}>às {horario}</span>}
-        {ev.descricao && <p className={styles.desc}>{ev.descricao}</p>}
+
+        <div className={styles.corpo}>
+          <div className={styles.topo}>
+            <span className={styles.cardTitulo}>{ev.titulo}</span>
+            <span
+              className={styles.badge}
+              style={{ background: cores.bg, color: cores.cor }}
+            >
+              {ev.tipo}
+            </span>
+          </div>
+          {horario && <span className={styles.horario}>às {horario}</span>}
+          {ev.descricao && <p className={styles.desc}>{ev.descricao}</p>}
+        </div>
       </div>
     </div>
   )

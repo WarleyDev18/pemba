@@ -28,16 +28,31 @@
   background: #ffffff;
   border: 1px solid #e8d898;
   border-radius: 10px;
-  padding: 1rem 1.25rem;
+  overflow: hidden;
   display: flex;
-  align-items: flex-start;
-  gap: 1.25rem;
+  flex-direction: column;
   transition: border-color 0.15s;
 
   &:hover { border-color: #C49A28; }
 }
 
 .cardPassado { opacity: 0.5; }
+
+.cardFoto {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+
+.cardInfo {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  padding: 1rem 1.25rem;
+  flex: 1;
+}
 
 .dataBox {
   display: flex;
