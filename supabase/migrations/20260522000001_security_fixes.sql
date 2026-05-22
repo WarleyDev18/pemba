@@ -151,6 +151,11 @@ GRANT SELECT ON vw_conversas_admin TO authenticated;
 --    Sem elas nenhuma doação era confirmada no banco
 -- ---------------------------------------------------------------
 
+DROP FUNCTION IF EXISTS fn_aprovar_doacao(uuid, text, jsonb);
+DROP FUNCTION IF EXISTS fn_aprovar_doacao(uuid, text, text, jsonb);
+DROP FUNCTION IF EXISTS fn_cancelar_doacao(uuid, jsonb);
+DROP FUNCTION IF EXISTS fn_cancelar_doacao(uuid, text, jsonb);
+
 CREATE OR REPLACE FUNCTION fn_aprovar_doacao(
   p_doacao_id      uuid,
   p_charge_id      text    DEFAULT NULL,
