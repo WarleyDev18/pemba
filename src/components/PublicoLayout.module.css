@@ -89,6 +89,132 @@
   font-weight: 600;
 }
 
+/* Notificações */
+.notifArea {
+  position: relative;
+  padding: 0 0.75rem 0.5rem;
+}
+
+.notifToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0.55rem 0.75rem;
+  background: #FEF9EE;
+  border: 1px solid #e8d898;
+  border-radius: 6px;
+  color: #7a6030;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+
+  &:hover { border-color: #C49A28; }
+}
+
+.notifToggleAtivo {
+  border-color: #C49A28;
+  background: #FDF5DC;
+  color: #5C4800;
+}
+
+.notifBadge {
+  background: #dc2626;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  min-width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.2rem;
+  margin-left: auto;
+}
+
+.notifPainel {
+  position: absolute;
+  bottom: calc(100% + 0.3rem);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e8d898;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.notifPainelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #e8d898;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #8B6914;
+  position: sticky;
+  top: 0;
+  background: #fff;
+}
+
+.notifLerTodas {
+  font-size: 0.7rem;
+  color: #b09050;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-weight: 400;
+  transition: color 0.15s;
+
+  &:hover { color: #8B6914; }
+}
+
+.notifItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #f5f0d0;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover { background: #FEF9EE; }
+  &:last-child { border-bottom: none; }
+}
+
+.notifNaoLida { background: #FFFCF0; }
+
+.notifItemTipo {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #b09050;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.notifItemTitulo {
+  font-size: 0.8rem;
+  color: #1a1508;
+  line-height: 1.3;
+}
+
+.notifVazio {
+  padding: 1rem 0.75rem;
+  color: #b09050;
+  font-size: 0.8rem;
+  margin: 0;
+  text-align: center;
+}
+
 .footer {
   padding: 1rem 1.25rem;
   border-top: 1px solid #e8d898;

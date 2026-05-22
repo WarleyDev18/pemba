@@ -1,5 +1,7 @@
+import { useState, useEffect, useRef } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { supabase } from '../lib/supabase'
 import styles from './PublicoLayout.module.css'
 
 const LINKS_BASE = [
@@ -30,6 +32,65 @@ export default function PublicoLayout({ children }) {
   const { user, perfil, logout } = useAuth()
   const links = LINKS_BASE.filter(l => !l.somente || l.somente === perfil)
   const navigate = useNavigate()
+  const [notificacoes, setNotificacoes] = useState([])
+  const [painelAberto, setPainelAberto] = useState(false)
+  const painelRef = useRef(null)
+
+  const naoLidas = notificacoes.filter(n => !n.lida).length
+
+  useEffect(() => {
+    if (!user) return
+    fetchNotificacoes()
+
+    const channel = supabase
+      .channel('notif-publico')
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'notificacoes',
+        filter: `usuario_id=eq.${user.id}`,
+      }, payload => {
+        setNotificacoes(prev => [payload.new, ...prev])
+      })
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
+  }, [user])
+
+  useEffect(() => {
+    function fecharFora(e) {
+      if (painelRef.current && !painelRef.current.contains(e.target)) {
+        setPainelAberto(false)
+      }
+    }
+    if (painelAberto) document.addEventListener('mousedown', fecharFora)
+    return () => document.removeEventListener('mousedown', fecharFora)
+  }, [painelAberto])
+
+  async function fetchNotificacoes() {
+    const { data } = await supabase
+      .from('notificacoes')
+      .select('*')
+      .order('criada_em', { ascending: false })
+      .limit(30)
+    setNotificacoes(data ?? [])
+  }
+
+  async function abrirNotificacao(n) {
+    if (!n.lida) {
+      await supabase.from('notificacoes').update({ lida: true }).eq('id', n.id)
+      setNotificacoes(prev => prev.map(x => x.id === n.id ? { ...x, lida: true } : x))
+    }
+    setPainelAberto(false)
+    navigate(n.tipo === 'comunicado' ? '/dashboard/comunicados' : '/dashboard/eventos')
+  }
+
+  async function marcarTodasLidas() {
+    const ids = notificacoes.filter(n => !n.lida).map(n => n.id)
+    if (!ids.length) return
+    await supabase.from('notificacoes').update({ lida: true }).in('id', ids)
+    setNotificacoes(prev => prev.map(n => ({ ...n, lida: true })))
+  }
 
   async function handleLogout() {
     await logout()
@@ -63,6 +124,46 @@ export default function PublicoLayout({ children }) {
             </NavLink>
           ))}
         </nav>
+
+        <div className={styles.notifArea} ref={painelRef}>
+          {painelAberto && (
+            <div className={styles.notifPainel}>
+              <div className={styles.notifPainelHeader}>
+                <span>Notificações</span>
+                {naoLidas > 0 && (
+                  <button onClick={marcarTodasLidas} className={styles.notifLerTodas}>
+                    Marcar todas como lidas
+                  </button>
+                )}
+              </div>
+              {notificacoes.length === 0 ? (
+                <p className={styles.notifVazio}>Nenhuma notificação.</p>
+              ) : (
+                notificacoes.map(n => (
+                  <button
+                    key={n.id}
+                    onClick={() => abrirNotificacao(n)}
+                    className={`${styles.notifItem} ${!n.lida ? styles.notifNaoLida : ''}`}
+                  >
+                    <span className={styles.notifItemTipo}>
+                      {n.tipo === 'comunicado' ? 'Comunicado' : 'Evento'}
+                    </span>
+                    <span className={styles.notifItemTitulo}>{n.titulo}</span>
+                  </button>
+                ))
+              )}
+            </div>
+          )}
+          <button
+            onClick={() => setPainelAberto(v => !v)}
+            className={`${styles.notifToggle} ${painelAberto ? styles.notifToggleAtivo : ''}`}
+          >
+            Notificações
+            {naoLidas > 0 && (
+              <span className={styles.notifBadge}>{naoLidas > 99 ? '99+' : naoLidas}</span>
+            )}
+          </button>
+        </div>
 
         <div className={styles.footer}>
           <span className={styles.email}>{user?.email}</span>
