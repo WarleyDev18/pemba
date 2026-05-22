@@ -1,0 +1,142 @@
+.titulo { font-size: 1.5rem; font-weight: 700; color: #8B6914; margin: 0 0 1.5rem; }
+
+.resumo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.resumoCard {
+  background: #ffffff;
+  border: 1px solid #e8d898;
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.resumoLabel {
+  font-size: 0.75rem;
+  color: #b09050;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 600;
+}
+
+.resumoValor {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #8B6914;
+}
+
+.filtrosLinha {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.filtros { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+.filtro {
+  padding: 0.3rem 0.8rem;
+  background: transparent;
+  border: 1px solid #e8d898;
+  color: #b09050;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  &:hover { border-color: #C49A28; color: #8B6914; }
+}
+
+.filtroAtivo { background: #FDF5DC; border-color: #C49A28; color: #5C4800; }
+
+.info { color: #b09050; font-size: 0.95rem; }
+
+.lista { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e8d898;
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  transition: border-color 0.15s;
+  &:hover { border-color: #C49A28; }
+}
+
+.cardEsq {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 90px;
+  flex-shrink: 0;
+}
+
+.cardValor {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1B5E20;
+}
+
+.cardMetodo {
+  font-size: 0.68rem;
+  color: #b09050;
+  background: #FDF5DC;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  margin-top: 0.15rem;
+}
+
+.cardCorpo { flex: 1; min-width: 0; }
+
+.cardNome {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1508;
+}
+
+.cardEmail {
+  display: block;
+  font-size: 0.78rem;
+  color: #b09050;
+  margin-bottom: 0.2rem;
+}
+
+.cardMsg {
+  font-size: 0.8rem;
+  color: #8B6914;
+  margin: 0;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardDir {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.statusBadge {
+  font-size: 0.68rem;
+  padding: 0.18rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cardData {
+  font-size: 0.75rem;
+  color: #b09050;
+}

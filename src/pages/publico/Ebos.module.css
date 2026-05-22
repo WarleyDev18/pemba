@@ -1,0 +1,133 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.titulo { font-size: 1.5rem; font-weight: 700; color: #8B6914; margin: 0; }
+
+.btnNovo {
+  padding: 0.5rem 1.1rem;
+  background: linear-gradient(135deg, #C49A28, #8B6914);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  &:hover { opacity: 0.9; }
+}
+
+.formCard {
+  background: #ffffff;
+  border: 1px solid #e8d898;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.formTitulo { font-size: 1rem; font-weight: 600; color: #8B6914; margin: 0 0 1.1rem; }
+
+.form { display: flex; flex-direction: column; gap: 1rem; }
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: #7a6030;
+}
+
+.input,
+.textarea {
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #e8d898;
+  background: #fffdf7;
+  color: #1a1508;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s;
+  resize: vertical;
+  &:focus { border-color: #8B6914; }
+}
+
+.erro { color: #8B1A1A; font-size: 0.85rem; margin: 0; }
+
+.btnSalvar {
+  padding: 0.65rem;
+  background: linear-gradient(135deg, #C49A28, #8B6914);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  &:hover:not(:disabled) { opacity: 0.9; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.info { color: #b09050; font-size: 0.95rem; }
+
+.secao { margin-bottom: 2rem; }
+
+.secaoTitulo {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #b09050;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.75rem;
+}
+
+.lista { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e8d898;
+  border-radius: 10px;
+  padding: 1.1rem 1.25rem;
+  transition: border-color 0.15s;
+  &:hover { border-color: #C49A28; }
+}
+
+.cardDimmed { opacity: 0.55; }
+
+.cardTopo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.cardDesc { font-size: 0.95rem; font-weight: 600; color: #1a1508; }
+
+.statusBadge {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.82rem;
+  color: #b09050;
+  margin-bottom: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.valor { font-weight: 600; color: #1B5E20; }
+
+.materiais { font-size: 0.83rem; color: #b09050; margin: 0; line-height: 1.5; }
+
+.materiaisLabel { color: #8B6914; font-weight: 600; }

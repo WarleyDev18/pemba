@@ -1,0 +1,302 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.titulo { font-size: 1.5rem; font-weight: 700; color: #8B6914; margin: 0; }
+
+.btnNovo {
+  padding: 0.5rem 1.1rem;
+  background: linear-gradient(135deg, #C49A28, #8B6914);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  &:hover { opacity: 0.9; }
+}
+
+/* Resumo */
+.resumo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.resumoCard {
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.resumoEntrada  { background: #EEF7EE; border-color: #9CC79C; }
+.resumoSaida    { background: #FEF0EE; border-color: #E0A090; }
+.resumoPositivo { background: #FEF9EE; border-color: #e8d898; }
+.resumoNegativo { background: #FEF0EE; border-color: #E0A090; }
+
+.resumoLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #b09050;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.resumoValor {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a1508;
+}
+
+.resumoEntrada  .resumoValor { color: #1B5E20; }
+.resumoSaida    .resumoValor { color: #8B1A1A; }
+.resumoPositivo .resumoValor { color: #8B6914; }
+.resumoNegativo .resumoValor { color: #8B1A1A; }
+
+/* Filtros */
+.filtrosLinha {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filtros { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+.filtro {
+  padding: 0.3rem 0.8rem;
+  background: transparent;
+  border: 1px solid #e8d898;
+  color: #b09050;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  &:hover { border-color: #C49A28; color: #8B6914; }
+}
+
+.filtroAtivo { background: #FDF5DC; border-color: #C49A28; color: #5C4800; }
+
+.info { color: #b09050; font-size: 0.95rem; }
+
+/* Lista */
+.lista { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e8d898;
+  border-radius: 10px;
+  padding: 0.9rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: border-color 0.15s;
+  &:hover { border-color: #C49A28; }
+}
+
+.cardEsq { flex-shrink: 0; }
+
+.tipoBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.tipoEntrada { background: #EEF7EE; color: #1B5E20; }
+.tipoSaida   { background: #FEF0EE; color: #8B1A1A; }
+
+.cardCorpo { flex: 1; min-width: 0; }
+
+.cardTopo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.cardDesc {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1508;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.statusBadge {
+  font-size: 0.65rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  color: #b09050;
+  flex-wrap: wrap;
+}
+
+.origem {
+  background: #FEF9EE;
+  color: #8B6914;
+  border: 0.5px solid #e8d898;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.cardDir {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.valor {
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.valorEntrada { color: #1B5E20; }
+.valorSaida   { color: #8B1A1A; }
+
+.acoes { display: flex; gap: 0.3rem; }
+
+.btnPagar {
+  padding: 0.2rem 0.6rem;
+  background: #EEF7EE;
+  color: #1B5E20;
+  border: 1px solid #9CC79C;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  &:hover { opacity: 0.8; }
+}
+
+.btnEditar {
+  padding: 0.2rem 0.6rem;
+  background: transparent;
+  border: 1px solid #e8d898;
+  color: #8B6914;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  &:hover { background: #FDF5DC; border-color: #C49A28; }
+}
+
+.btnExcluir {
+  padding: 0.2rem 0.6rem;
+  background: transparent;
+  border: 1px solid #E0A090;
+  color: #8B1A1A;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  &:hover { background: #FEF0EE; }
+}
+
+/* Modal */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal {
+  background: #ffffff;
+  border: 1px solid #e8d898;
+  border-radius: 12px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modalTitulo { font-size: 1.1rem; font-weight: 700; color: #8B6914; margin: 0 0 1.25rem; }
+
+.form { display: flex; flex-direction: column; gap: 1rem; }
+
+.linha { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: #7a6030;
+}
+
+.input {
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #e8d898;
+  background: #fffdf7;
+  color: #1a1508;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s;
+  &:focus { border-color: #8B6914; }
+}
+
+.erro { color: #8B1A1A; font-size: 0.85rem; margin: 0; }
+
+.modalAcoes { display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; }
+
+.btnCancelarModal {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid #e8d898;
+  color: #b09050;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  &:hover { border-color: #C49A28; color: #8B6914; }
+}
+
+.btnSalvar {
+  padding: 0.5rem 1.25rem;
+  background: linear-gradient(135deg, #C49A28, #8B6914);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  &:hover:not(:disabled) { opacity: 0.9; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}

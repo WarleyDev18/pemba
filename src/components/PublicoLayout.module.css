@@ -1,0 +1,127 @@
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+  background: #fafaf7;
+  color: #1a1508;
+}
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-right: 1px solid #e8d898;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.brand {
+  padding: 1.25rem 1.25rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  border-bottom: 1px solid #e8d898;
+}
+
+.brandLogo {
+  width: 28px;
+  height: 28px;
+  background: #F8F8F8;
+  border: 1px solid #D0D0C8;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+}
+
+.brandName {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #8B6914;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.brandSub {
+  font-size: 0.6rem;
+  color: #b09050;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem 0;
+  flex: 1;
+  gap: 0.1rem;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 1.25rem;
+  color: #7a6030;
+  text-decoration: none;
+  font-size: 0.875rem;
+  border-left: 3px solid transparent;
+  transition: color 0.15s, background 0.15s;
+
+  &:hover {
+    color: #8B6914;
+    background: #FEF9EE;
+  }
+}
+
+.linkActive {
+  color: #5C4800;
+  background: #FDF5DC;
+  border-left-color: #C49A28;
+  font-weight: 600;
+}
+
+.footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid #e8d898;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.email {
+  font-size: 0.75rem;
+  color: #b09050;
+  word-break: break-all;
+}
+
+.sair {
+  padding: 0.4rem 0;
+  background: transparent;
+  border: 1px solid #e8d898;
+  color: #8B6914;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+
+  &:hover {
+    background: #8B6914;
+    color: #fff;
+    border-color: #8B6914;
+  }
+}
+
+.main {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}

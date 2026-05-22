@@ -1,122 +1,79 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
 
-function App() {
-  const [count, setCount] = useState(0)
+import Login from './pages/Login'
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+import AdminDashboard from './pages/admin/Dashboard'
+import AdminComunicados from './pages/admin/Comunicados'
+import AdminEventos from './pages/admin/Eventos'
+import AdminAgendamentos from './pages/admin/Agendamentos'
+import AdminEbos from './pages/admin/Ebos'
+import AdminFinanceiro from './pages/admin/Financeiro'
+import AdminChatLista from './pages/admin/ChatLista'
+import AdminChatConversa from './pages/admin/ChatConversa'
+import AdminDoacoes from './pages/admin/Doacoes'
+import AdminUsuarios from './pages/admin/Usuarios'
 
-      <div className="ticks"></div>
+import PublicoDashboard from './pages/publico/Dashboard'
+import PublicoComunicados from './pages/publico/Comunicados'
+import PublicoEventos from './pages/publico/Eventos'
+import PublicoAgendamentos from './pages/publico/Agendamentos'
+import PublicoEbos from './pages/publico/Ebos'
+import PublicoChat from './pages/publico/Chat'
+import PublicoDoacao from './pages/publico/Doacao'
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+function RedirectByPerfil() {
+  const { user, perfil, loading } = useAuth()
+  if (loading) return null
+  if (!user) return <Navigate to="/login" replace />
+  if (perfil === 'admin') return <Navigate to="/admin" replace />
+  return <Navigate to="/dashboard" replace />
 }
 
-export default App
+function AdminRoute({ children }) {
+  return <ProtectedRoute perfilRequerido="admin">{children}</ProtectedRoute>
+}
+
+function PublicoRoute({ children }) {
+  return <ProtectedRoute perfilRequerido={['filho_santo', 'cliente']}>{children}</ProtectedRoute>
+}
+
+function FilhoSantoRoute({ children }) {
+  return <ProtectedRoute perfilRequerido="filho_santo">{children}</ProtectedRoute>
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+
+          {/* Rotas admin */}
+          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+          <Route path="/admin/comunicados" element={<AdminRoute><AdminComunicados /></AdminRoute>} />
+          <Route path="/admin/eventos" element={<AdminRoute><AdminEventos /></AdminRoute>} />
+          <Route path="/admin/agendamentos" element={<AdminRoute><AdminAgendamentos /></AdminRoute>} />
+          <Route path="/admin/ebos" element={<AdminRoute><AdminEbos /></AdminRoute>} />
+          <Route path="/admin/financeiro" element={<AdminRoute><AdminFinanceiro /></AdminRoute>} />
+          <Route path="/admin/chat" element={<AdminRoute><AdminChatLista /></AdminRoute>} />
+          <Route path="/admin/chat/:conversa_id" element={<AdminRoute><AdminChatConversa /></AdminRoute>} />
+          <Route path="/admin/doacoes" element={<AdminRoute><AdminDoacoes /></AdminRoute>} />
+          <Route path="/admin/usuarios" element={<AdminRoute><AdminUsuarios /></AdminRoute>} />
+
+          {/* Rotas público */}
+          <Route path="/dashboard" element={<PublicoRoute><PublicoDashboard /></PublicoRoute>} />
+          <Route path="/dashboard/comunicados" element={<FilhoSantoRoute><PublicoComunicados /></FilhoSantoRoute>} />
+          <Route path="/dashboard/eventos" element={<PublicoRoute><PublicoEventos /></PublicoRoute>} />
+          <Route path="/dashboard/agendamentos" element={<PublicoRoute><PublicoAgendamentos /></PublicoRoute>} />
+          <Route path="/dashboard/ebos" element={<PublicoRoute><PublicoEbos /></PublicoRoute>} />
+          <Route path="/dashboard/chat" element={<PublicoRoute><PublicoChat /></PublicoRoute>} />
+          <Route path="/dashboard/doacao" element={<PublicoRoute><PublicoDoacao /></PublicoRoute>} />
+
+          <Route path="*" element={<RedirectByPerfil />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  )
+}
