@@ -71,14 +71,19 @@
   letter-spacing: 0.05em;
 }
 
-.badgePublico {
+.badgeFilhoSanto {
   background: #EEF7EE;
   color: #1B5E20;
 }
 
-.badgePrivado {
-  background: #FEF9EE;
-  color: #8B6914;
+.badgeCliente {
+  background: #E8F0FE;
+  color: #1A56DB;
+}
+
+.badgeTodos {
+  background: #FDF5DC;
+  color: #5C4800;
   border: 0.5px solid #e8d898;
 }
 
@@ -190,20 +195,31 @@
   &:focus { border-color: #8B6914; }
 }
 
-.checkLabel {
+.destinatarioGroup {
   display: flex;
-  align-items: center;
   gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #7a6030;
-  cursor: pointer;
+  margin-top: 0.1rem;
 }
 
-.checkbox {
-  width: 1rem;
-  height: 1rem;
-  accent-color: #8B6914;
+.destinatarioBotao {
+  flex: 1;
+  padding: 0.5rem 0.4rem;
+  background: #fafaf7;
+  border: 1px solid #e8d898;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #b09050;
   cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+
+  &:hover:not(.destinatarioBotaoAtivo) { background: #FEF9EE; border-color: #C49A28; }
+}
+
+.destinatarioBotaoAtivo {
+  background: #FDF5DC;
+  border-color: #C49A28;
+  color: #5C4800;
 }
 
 .erro {

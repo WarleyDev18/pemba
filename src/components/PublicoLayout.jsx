@@ -7,7 +7,7 @@ const LINKS_BASE = [
   { to: '/dashboard/agendamentos', label: 'Agendamentos' },
   { to: '/dashboard/ebos', label: 'Ebós' },
   { to: '/dashboard/eventos', label: 'Calendário' },
-  { to: '/dashboard/comunicados', label: 'Comunicados', somente: 'filho_santo' },
+  { to: '/dashboard/comunicados', label: 'Comunicados' },
   { to: '/dashboard/chat', label: 'Chat' },
   { to: '/dashboard/doacao', label: 'Doações' },
 ]

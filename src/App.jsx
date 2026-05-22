@@ -64,7 +64,7 @@ export default function App() {
 
           {/* Rotas público */}
           <Route path="/dashboard" element={<PublicoRoute><PublicoDashboard /></PublicoRoute>} />
-          <Route path="/dashboard/comunicados" element={<FilhoSantoRoute><PublicoComunicados /></FilhoSantoRoute>} />
+          <Route path="/dashboard/comunicados" element={<PublicoRoute><PublicoComunicados /></PublicoRoute>} />
           <Route path="/dashboard/eventos" element={<PublicoRoute><PublicoEventos /></PublicoRoute>} />
           <Route path="/dashboard/agendamentos" element={<PublicoRoute><PublicoAgendamentos /></PublicoRoute>} />
           <Route path="/dashboard/ebos" element={<PublicoRoute><PublicoEbos /></PublicoRoute>} />

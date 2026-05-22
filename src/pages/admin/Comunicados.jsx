@@ -3,7 +3,13 @@ import { supabase } from '../../lib/supabase'
 import AdminLayout from '../../components/AdminLayout'
 import styles from './Comunicados.module.css'
 
-const vazio = { titulo: '', conteudo: '', publico: true }
+const vazio = { titulo: '', conteudo: '', destinatario: 'filho_santo' }
+
+const DESTINATARIO = {
+  filho_santo: { label: 'Filhos de Santo', classe: styles.badgeFilhoSanto },
+  cliente:     { label: 'Clientes',        classe: styles.badgeCliente },
+  todos:       { label: 'Todos',           classe: styles.badgeTodos },
+}
 
 export default function AdminComunicados() {
   const [comunicados, setComunicados] = useState([])
@@ -34,7 +40,7 @@ export default function AdminComunicados() {
   }
 
   function abrirEditar(c) {
-    setForm({ titulo: c.titulo, conteudo: c.conteudo, publico: c.publico })
+    setForm({ titulo: c.titulo, conteudo: c.conteudo, destinatario: c.destinatario })
     setEditandoId(c.id)
     setErro('')
     setModalAberto(true)
@@ -52,7 +58,11 @@ export default function AdminComunicados() {
     setSalvando(true)
     setErro('')
 
-    const payload = { titulo: form.titulo.trim(), conteudo: form.conteudo.trim(), publico: form.publico }
+    const payload = {
+      titulo: form.titulo.trim(),
+      conteudo: form.conteudo.trim(),
+      destinatario: form.destinatario,
+    }
 
     const { error } = editandoId
       ? await supabase.from('comunicados').update(payload).eq('id', editandoId)
@@ -98,8 +108,8 @@ export default function AdminComunicados() {
             <div key={c.id} className={styles.card}>
               <div className={styles.cardTopo}>
                 <span className={styles.cardTitulo}>{c.titulo}</span>
-                <span className={`${styles.badge} ${c.publico ? styles.badgePublico : styles.badgePrivado}`}>
-                  {c.publico ? 'Público' : 'Privado'}
+                <span className={`${styles.badge} ${DESTINATARIO[c.destinatario]?.classe ?? ''}`}>
+                  {DESTINATARIO[c.destinatario]?.label ?? c.destinatario}
                 </span>
               </div>
               <p className={styles.cardConteudo}>{c.conteudo}</p>
@@ -146,14 +156,20 @@ export default function AdminComunicados() {
                 />
               </label>
 
-              <label className={styles.checkLabel}>
-                <input
-                  type="checkbox"
-                  checked={form.publico}
-                  onChange={e => setForm(f => ({ ...f, publico: e.target.checked }))}
-                  className={styles.checkbox}
-                />
-                Visível para todos
+              <label className={styles.label}>
+                Enviar para
+                <div className={styles.destinatarioGroup}>
+                  {Object.entries(DESTINATARIO).map(([valor, { label }]) => (
+                    <button
+                      key={valor}
+                      type="button"
+                      onClick={() => setForm(f => ({ ...f, destinatario: valor }))}
+                      className={`${styles.destinatarioBotao} ${form.destinatario === valor ? styles.destinatarioBotaoAtivo : ''}`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
               </label>
 
               {erro && <p className={styles.erro}>{erro}</p>}
