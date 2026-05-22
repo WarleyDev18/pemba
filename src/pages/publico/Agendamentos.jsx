@@ -6,6 +6,11 @@ import styles from './Agendamentos.module.css'
 
 const TIPOS = ['Consulta', 'Atendimento', 'Limpeza Espiritual', 'Trabalho Espiritual', 'Despacho', 'Outro']
 
+const HORARIOS = [
+  '08:00','09:00','10:00','11:00','12:00','13:00',
+  '14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+]
+
 const COR_STATUS = {
   pendente:   { bg: '#FEF9EE', cor: '#8B6914', label: 'Pendente' },
   confirmado: { bg: '#EEF7EE', cor: '#1B5E20', label: 'Confirmado' },
@@ -24,10 +29,26 @@ export default function PublicoAgendamentos() {
   const [formAberto, setFormAberto] = useState(false)
   const [salvando, setSalvando] = useState(false)
   const [erro, setErro] = useState('')
+  const [horariosOcupados, setHorariosOcupados] = useState([])
+  const [buscandoHorarios, setBuscandoHorarios] = useState(false)
 
   useEffect(() => {
     if (user) buscarUsuarioEAgendamentos()
   }, [user])
+
+  useEffect(() => {
+    if (!form.data) { setHorariosOcupados([]); return }
+    setBuscandoHorarios(true)
+    supabase
+      .from('agendamentos')
+      .select('horario')
+      .eq('data', form.data)
+      .neq('status', 'cancelado')
+      .then(({ data }) => {
+        setHorariosOcupados((data ?? []).map(a => a.horario?.slice(0, 5)))
+        setBuscandoHorarios(false)
+      })
+  }, [form.data])
 
   async function buscarUsuarioEAgendamentos() {
     setCarregando(true)
@@ -49,6 +70,17 @@ export default function PublicoAgendamentos() {
     setCarregando(false)
   }
 
+  function slotDisponivel(slot) {
+    if (horariosOcupados.includes(slot)) return false
+    const agora = new Date()
+    const hoje = agora.toISOString().split('T')[0]
+    if (form.data === hoje) {
+      const horaAtual = `${String(agora.getHours()).padStart(2, '0')}:${String(agora.getMinutes()).padStart(2, '0')}`
+      if (slot <= horaAtual) return false
+    }
+    return true
+  }
+
   async function salvar(e) {
     e.preventDefault()
     if (!usuarioId) return
@@ -58,6 +90,11 @@ export default function PublicoAgendamentos() {
     const hoje = new Date().toISOString().split('T')[0]
     if (form.data < hoje) {
       setErro('A data deve ser a partir de hoje.')
+      setSalvando(false)
+      return
+    }
+    if (!form.horario) {
+      setErro('Selecione um horário disponível.')
       setSalvando(false)
       return
     }
@@ -118,30 +155,52 @@ export default function PublicoAgendamentos() {
         <div className={styles.formCard}>
           <h2 className={styles.formTitulo}>Solicitar agendamento</h2>
           <form onSubmit={salvar} className={styles.form}>
-            <div className={styles.linha}>
-              <label className={styles.label}>
-                Data
-                <input
-                  type="date"
-                  value={form.data}
-                  onChange={e => setForm(f => ({ ...f, data: e.target.value }))}
-                  required
-                  min={new Date().toISOString().split('T')[0]}
-                  className={styles.input}
-                  autoFocus
-                />
-              </label>
-              <label className={styles.label}>
-                Horário
-                <input
-                  type="time"
-                  value={form.horario}
-                  onChange={e => setForm(f => ({ ...f, horario: e.target.value }))}
-                  required
-                  className={styles.input}
-                />
-              </label>
-            </div>
+            <label className={styles.label}>
+              Data
+              <input
+                type="date"
+                value={form.data}
+                onChange={e => setForm(f => ({ ...f, data: e.target.value, horario: '' }))}
+                required
+                min={new Date().toISOString().split('T')[0]}
+                className={styles.input}
+                autoFocus
+              />
+            </label>
+
+            {form.data && (
+              <div className={styles.slotGroup}>
+                <span className={styles.slotLabel}>
+                  {buscandoHorarios ? 'Verificando disponibilidade...' : 'Horários disponíveis'}
+                </span>
+                <div className={styles.slotGrid}>
+                  {HORARIOS.map(slot => {
+                    const disponivel = slotDisponivel(slot)
+                    const selecionado = form.horario === slot
+                    return (
+                      <button
+                        key={slot}
+                        type="button"
+                        disabled={!disponivel || buscandoHorarios}
+                        onClick={() => setForm(f => ({ ...f, horario: slot }))}
+                        className={`${styles.slot} ${selecionado ? styles.slotSelecionado : ''} ${!disponivel ? styles.slotOcupado : ''}`}
+                      >
+                        {slot}
+                      </button>
+                    )
+                  })}
+                </div>
+                {!buscandoHorarios && (
+                  <p className={styles.slotDica}>
+                    {horariosOcupados.length === HORARIOS.length
+                      ? 'Nenhum horário disponível nesta data.'
+                      : form.horario
+                        ? `Horário selecionado: ${form.horario}`
+                        : 'Selecione um horário acima.'}
+                  </p>
+                )}
+              </div>
+            )}
 
             <label className={styles.label}>
               Tipo de atendimento

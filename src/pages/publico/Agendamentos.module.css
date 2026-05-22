@@ -178,3 +178,65 @@
   transition: opacity 0.15s;
   &:hover { opacity: 0.85; }
 }
+
+/* Grade de horários */
+.slotGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.slotLabel {
+  font-size: 0.85rem;
+  color: #7a6030;
+  font-weight: 500;
+}
+
+.slotGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.4rem;
+}
+
+.slot {
+  padding: 0.55rem 0.25rem;
+  border: 1px solid #e8d898;
+  border-radius: 6px;
+  background: #fffdf7;
+  color: #8B6914;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+
+  &:hover:not(:disabled) {
+    background: #FDF5DC;
+    border-color: #C49A28;
+  }
+}
+
+.slotSelecionado {
+  background: linear-gradient(135deg, #C49A28, #8B6914);
+  color: #fff;
+  border-color: #8B6914;
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #C49A28, #8B6914);
+    opacity: 0.9;
+  }
+}
+
+.slotOcupado {
+  background: #f3f4f6;
+  color: #bbb;
+  border-color: #e5e7eb;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.slotDica {
+  font-size: 0.8rem;
+  color: #b09050;
+  margin: 0;
+  font-style: italic;
+}

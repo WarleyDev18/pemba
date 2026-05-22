@@ -47,7 +47,7 @@ export default function AdminAgendamentos() {
     const { data } = await supabase
       .from('usuarios')
       .select('id, nome, email')
-      .eq('perfil', 'publico')
+      .in('perfil', ['filho_santo', 'cliente'])
       .order('nome')
     setUsuarios(data ?? [])
   }
