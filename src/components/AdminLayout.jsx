@@ -21,9 +21,43 @@ function dataAmanha() {
   return d.toISOString().split('T')[0]
 }
 
+function IconMenu() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
+    </svg>
+  )
+}
+
+function IconClose() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  )
+}
+
+function LogoSvg() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 30 30" aria-hidden="true">
+      <rect x="11" y="1" width="8" height="26" rx="4" fill="#B8B8C0"/>
+      <ellipse cx="15" cy="1" rx="11" ry="3.5" fill="#D0D0D8"/>
+      <path d="M15,0 Q7,-4 3,0 Q8,3.5 11,3 Q15,3 15,0Z" fill="#D8D8E0"/>
+      <path d="M15,0 Q23,-4 27,0 Q22,3.5 19,3 Q15,3 15,0Z" fill="#D8D8E0"/>
+      <circle cx="15" cy="0" r="4" fill="#EBEBF4"/>
+      <ellipse cx="15" cy="11" rx="7" ry="2.5" fill="#D0D0D8"/>
+      <ellipse cx="15" cy="18" rx="9" ry="3" fill="#C8C8D0"/>
+      <circle cx="15" cy="7" r="2.5" fill="#E0E0E8"/>
+      <circle cx="15" cy="14.5" r="2.5" fill="#E0E0E8"/>
+      <ellipse cx="15" cy="27" rx="11" ry="4" fill="#C0C0C8"/>
+    </svg>
+  )
+}
+
 export default function AdminLayout({ children }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const [sidebarAberta, setSidebarAberta] = useState(false)
   const [badgeChat, setBadgeChat] = useState(0)
   const [ebosAmanha, setEbosAmanha] = useState([])
   const [alertaDispensado, setAlertaDispensado] = useState(() => {
@@ -67,33 +101,45 @@ export default function AdminLayout({ children }) {
     setAlertaDispensado(true)
   }
 
+  function fecharSidebar() { setSidebarAberta(false) }
+
   async function handleLogout() {
+    fecharSidebar()
     await logout()
     navigate('/login', { replace: true })
   }
 
   return (
     <div className={styles.wrapper}>
-      <aside className={styles.sidebar}>
+
+      {/* Header visível apenas no mobile */}
+      <div className={styles.mobileHeader}>
+        <div className={styles.mobileBrand}>
+          <div className={styles.brandLogo}><LogoSvg /></div>
+          <span className={styles.brandName}>Pemba</span>
+        </div>
+        <button onClick={() => setSidebarAberta(true)} className={styles.hamburger} aria-label="Abrir menu">
+          <IconMenu />
+        </button>
+      </div>
+
+      {/* Overlay mobile */}
+      {sidebarAberta && (
+        <div className={styles.overlay} onClick={fecharSidebar} />
+      )}
+
+      {/* Sidebar */}
+      <aside className={`${styles.sidebar} ${sidebarAberta ? styles.sidebarAberta : ''}`}>
+
         <div className={styles.brand}>
-          <div className={styles.brandLogo}>
-            <svg width="20" height="20" viewBox="0 0 30 30" aria-hidden="true">
-              <rect x="11" y="1" width="8" height="26" rx="4" fill="#B8B8C0"/>
-              <ellipse cx="15" cy="1" rx="11" ry="3.5" fill="#D0D0D8"/>
-              <path d="M15,0 Q7,-4 3,0 Q8,3.5 11,3 Q15,3 15,0Z" fill="#D8D8E0"/>
-              <path d="M15,0 Q23,-4 27,0 Q22,3.5 19,3 Q15,3 15,0Z" fill="#D8D8E0"/>
-              <circle cx="15" cy="0" r="4" fill="#EBEBF4"/>
-              <ellipse cx="15" cy="11" rx="7" ry="2.5" fill="#D0D0D8"/>
-              <ellipse cx="15" cy="18" rx="9" ry="3" fill="#C8C8D0"/>
-              <circle cx="15" cy="7" r="2.5" fill="#E0E0E8"/>
-              <circle cx="15" cy="14.5" r="2.5" fill="#E0E0E8"/>
-              <ellipse cx="15" cy="27" rx="11" ry="4" fill="#C0C0C8"/>
-            </svg>
-          </div>
+          <div className={styles.brandLogo}><LogoSvg /></div>
           <div className={styles.brandText}>
             <span className={styles.brandName}>Pemba</span>
             <span className={styles.brandSub}>painel admin</span>
           </div>
+          <button onClick={fecharSidebar} className={styles.btnFechar} aria-label="Fechar menu">
+            <IconClose />
+          </button>
         </div>
 
         <nav className={styles.nav}>
@@ -102,6 +148,7 @@ export default function AdminLayout({ children }) {
               key={to}
               to={to}
               end={exact}
+              onClick={fecharSidebar}
               className={({ isActive }) =>
                 `${styles.link} ${isActive ? styles.linkActive : ''}`
               }

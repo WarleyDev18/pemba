@@ -28,12 +28,29 @@ const OpaxoroLogo = () => (
   </svg>
 )
 
+function IconMenu() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
+    </svg>
+  )
+}
+
+function IconClose() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  )
+}
+
 export default function PublicoLayout({ children }) {
   const { user, perfil, logout } = useAuth()
   const links = LINKS_BASE.filter(l => !l.somente || l.somente === perfil)
   const navigate = useNavigate()
   const [notificacoes, setNotificacoes] = useState([])
   const [painelAberto, setPainelAberto] = useState(false)
+  const [sidebarAberta, setSidebarAberta] = useState(false)
   const painelRef = useRef(null)
 
   const naoLidas = notificacoes.filter(n => !n.lida).length
@@ -92,14 +109,37 @@ export default function PublicoLayout({ children }) {
     setNotificacoes(prev => prev.map(n => ({ ...n, lida: true })))
   }
 
+  function fecharSidebar() {
+    setSidebarAberta(false)
+    setPainelAberto(false)
+  }
+
   async function handleLogout() {
+    fecharSidebar()
     await logout()
     navigate('/login', { replace: true })
   }
 
   return (
     <div className={styles.wrapper}>
-      <aside className={styles.sidebar}>
+
+      {/* Header visível apenas no mobile */}
+      <div className={styles.mobileHeader}>
+        <div className={styles.mobileBrand}>
+          <div className={styles.brandLogo}><OpaxoroLogo /></div>
+          <span className={styles.brandName}>Pemba</span>
+        </div>
+        <button onClick={() => setSidebarAberta(true)} className={styles.hamburger} aria-label="Abrir menu">
+          <IconMenu />
+        </button>
+      </div>
+
+      {/* Overlay mobile */}
+      {sidebarAberta && (
+        <div className={styles.overlay} onClick={fecharSidebar} />
+      )}
+
+      <aside className={`${styles.sidebar} ${sidebarAberta ? styles.sidebarAberta : ''}`}>
         <div className={styles.brand}>
           <div className={styles.brandLogo}>
             <OpaxoroLogo />
@@ -108,6 +148,9 @@ export default function PublicoLayout({ children }) {
             <span className={styles.brandName}>Pemba</span>
             <span className={styles.brandSub}>terreiro</span>
           </div>
+          <button onClick={fecharSidebar} className={styles.btnFechar} aria-label="Fechar menu">
+            <IconClose />
+          </button>
         </div>
 
         <nav className={styles.nav}>
@@ -116,6 +159,7 @@ export default function PublicoLayout({ children }) {
               key={to}
               to={to}
               end={exact}
+              onClick={fecharSidebar}
               className={({ isActive }) =>
                 `${styles.link} ${isActive ? styles.linkActive : ''}`
               }
